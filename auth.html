@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>StealthVM Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    /* Background */
+ /* Background grid + gradients */
+body {
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: 
+        radial-gradient(circle at 80% 20%, rgba(80, 40, 150, 0.35), transparent 50%),
+        radial-gradient(circle at 20% 80%, rgba(10, 60, 120, 0.35), transparent 50%),
+        linear-gradient(135deg, #0b101c 0%, #0f1523 40%, #0c101b 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 🔥 Enhanced grid overlay */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(transparent 23px, rgba(182, 181, 181, 0.12) 1px, transparent 24px),
+        linear-gradient(90deg, transparent 23px, rgba(182, 181, 181, 0.12) 1px, transparent 24px);
+    background-size: 50px 50px;
+    opacity: 1;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* 🌑 Stronger vignette for depth */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+body.no-vignette::after {
+    background: none !important;
+}
+
+/* LOGIN CARD — stays centered above grid */
+.login-card {
+position: fixed;      /* stays centered in viewport */
+    top: 50%;             /* center vertically */
+    left: 50%;            /* center horizontally */
+    transform: translate(-50%, -50%); /* offset by half its width/height */    z-index: 5;
+
+    width: 350px;
+    padding: 32px;
+    background: linear-gradient(180deg, #14275438 0%, #1827574b 100%);
+    backdrop-filter: blur(10px);       /* frosted glass effect */
+    -webkit-backdrop-filter: blur(10px); /* Safari support */
+    opacity: 15px;
+    border-radius: 15px;
+    border: 1px solid rgba(36,54,100,255);
+    box-shadow:
+        0 8px 30px rgba(0,0,0,0.6),
+        inset 0 0 40px rgba(0,90,255,0.05);
+    animation: fadeIn 0.65s ease-out;
+}
+
+.login-card:hover {
+  border: 1px solid rgba(26,44,90,255);
+}
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* LOGO */
+    .logo {
+        text-align: center;
+        font-size: 26px;
+        font-weight: 700;
+        color: #4db8ff;
+        margin-bottom: 4px;
+    }
+.login-card input::placeholder {
+    color: rgba(148, 163, 184, 255);  /* lighter, semi-transparent */
+}
+.logo img {
+    width: 160px;   /* adjust size */
+    height: auto;
+    border-radius: 12px; /* optional */
+}
+    .logo span {
+        background: linear-gradient(90deg, #4db8ff, #70a1ff);
+        -webkit-background-clip: text;
+        color: transparent;
+    }
+
+    .subtitle {
+        text-align: center;
+        margin-bottom: 28px;
+        color: rgba(255,255,255,0.7);
+        font-size: 15px;
+    }
+
+#dashboard-wrapper {
+      margin-left: 60px;
+
+  display: flex;
+  height: 100vh;
+  background: #0d1117;
+}
+
+/* --------------------------
+   SIDEBAR
+--------------------------- */
+.dashboard-sidebar {
+      position: fixed;
+
+  width: 250px;
+  background: #0f172a;
+  padding: 25px 15px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #1e293b;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 35px;
+  font-size: 20px;
+  color: #fff;
+  font-weight: 600;
+}
+
+.sidebar-nav {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar-nav li {
+  padding: 12px 15px;
+  margin-bottom: 6px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  color: #cbd5e1;
+  transition: 0.2s;
+}
+
+.sidebar-nav li:hover {
+  background: #1e293b;
+  color: #fff;
+}
+
+.sidebar-nav .active {
+  background: #1e293b;
+  color: #fff;
+}
+.dashboard-sidebar {
+    width: 250px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+}
+
+.content-wrapper {
+    margin-left: 250px; /* same width as sidebar */
+    padding: 20px;
+}
+/* --------------------------
+   MAIN DASHBOARD AREA
+--------------------------- */
+.dashboard-main {
+  flex: 1;
+  padding: 25px 35px;
+}
+
+.dashboard-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dashboard-title {
+  font-size: 22px;
+  color: #fff;
+  font-weight: 600;
+}
+
+.generate-key-btn {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.generate-key-btn:hover {
+  background: #1d4ed8;
+}
+
+/* --------------------------
+   DASHBOARD CARDS
+--------------------------- */
+.dashboard-cards {
+      width: 164%;
+
+  margin-top: 25px;
+  display: flex;
+  gap: 20px;
+}
+
+.dashboard-card {
+  
+  flex: 1;
+  background: #111827;
+  padding: 20px;
+  border-radius: 14px;
+  border: 1px solid #1e293b;
+}
+
+.card-title {
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+.card-value {
+  font-size: 28px;
+  font-weight: 600;
+  margin-top: 5px;
+  color: #fff;
+}
+
+/* --------------------------
+   TABLE SECTION
+--------------------------- */
+.dashboard-table-section {
+    width: 160%;
+
+  margin-top: 35px;
+  background: #111827;
+  padding: 20px;
+  border-radius: 14px;
+  border: 1px solid #1e293b;
+}
+
+.dashboard-table-header {
+  
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.dashboard-table-header span {
+  flex: 1;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.dashboard-search {
+  padding: 8px 12px;
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  color: white;
+  outline: none;
+}
+
+.refresh-btn {
+  background: #1e293b;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.refresh-btn:hover {
+  background: #334155;
+}
+
+/* --------------------------
+   TABLE STYLE
+--------------------------- */
+.dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #ddd;
+}
+
+.dashboard-table th {
+  text-align: left;
+  padding: 10px 8px;
+  border-bottom: 1px solid #1e293b;
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+.dashboard-table td {
+  padding: 12px 8px;
+  border-bottom: 1px solid #1e293b;
+  font-size: 15px;
+}
+
+.sub-date {
+  color: #64748b;
+  font-size: 12px;
+}
+
+/* --------------------------
+   STATUS LABELS
+--------------------------- */
+.status {
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.status.active {
+  background: #10b98133;
+  color: #10b981;
+}
+
+.status.waiting {
+  background: #fbbf2433;
+  color: #fbbf24;
+}
+
+    /* LABEL */
+    label {
+        display: block;
+        color: rgba(255,255,255,1.75);
+        font-size: 13px;
+        margin-bottom: 6px;
+        font-weight: 500;
+    }
+
+    /* INPUT GROUP */
+    .input-wrap {
+        position: relative;
+        margin-bottom: 22px;
+    }
+
+    /* INPUT LIKE IN IMAGE */
+    .input-wrap input {
+        width: 75%;
+        padding: 10px 41px;
+        background: rgba(14, 27, 63, 255);
+        border: 0.5px solid rgba(35, 66, 133, 255);
+        border-radius: 5px;
+        font-size: 15px;
+        color: #ffffff;
+        outline: none;
+        transition: 0.2s ease;
+    }
+
+    .input-wrap input:focus {
+        border-color: #4db8ff;
+        background: rgba(255,255,255,0.08);
+    }
+
+    /* ICONS */
+    .icon-left {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    color: #fff;
+    pointer-events: none;
+}
+
+.icon-left svg {
+    width: 75%;
+    height: 100%;
+    background: 60a5fa;
+
+}
+.input-wrap .icon-left svg,
+.input-wrap .toggle-pass svg {
+    color: #60a5fa;  /* Tailwind sky-400 color */
+}
+
+/* Optional: hover effect for toggle-pass */
+.toggle-pass:hover svg {
+    color: #93c5fd; /* lighter blue on hover */
+}
+.toggle-pass {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    color: #fff;
+}
+
+.toggle-pass svg {
+    width: 100%;
+    height: 100%;
+}
+
+    /* LOGIN BUTTON */
+    .login-btn {
+        width: 100%;
+        margin-top: 6px;
+        padding: 13px 0;
+        border-radius: 10px;
+        border: none;
+        background: linear-gradient(90deg, #0087ff, #00a6ff);
+        color: white;
+        font-size: 17px;
+        cursor: pointer;
+        font-weight: 600;
+        box-shadow: 0 4px 18px rgba(0,162,255,0.2);
+        transition: 0.2s ease;
+    }
+
+    .login-btn:hover {
+        background: linear-gradient(90deg, #00a6ff, #0087ff);
+        box-shadow: 0 6px 22px rgba(0,162,255,0.35);
+    }
+    .toggle-pass {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    color: #fff;
+}
+
+.toggle-pass svg {
+    width: 100%;
+    height: 100%;
+}
+</style>
+</head>
+<body>
+
+<div class="login-card" id="login-card">
+
+    <div class="logo">
+    <img src="images/silentvm.png" alt="Logo">
+    </div>
+
+    <div class="subtitle">Admin Dashboard Login</div>
+
+    <form id="login-form">
+
+       <label for="user">Username</label>
+<div class="input-wrap">
+    <!-- User icon -->
+    <span class="icon-left">
+        <svg class="icon-input" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4z"/>
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+        </svg>
+    </span>
+    <input id="user" type="text" placeholder="Enter your username">
+</div>
+
+        <label for="pass">Password</label>
+<div class="input-wrap">
+    <!-- Lock icon -->
+    <span class="icon-left">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+    </span>
+
+    <!-- Password input -->
+    <input id="pass" type="password" placeholder="Enter password">
+
+    <!-- Eye toggle -->
+    <span class="toggle-pass" onclick="togglePass(this)">
+        <!-- Eye open (default) -->
+        <svg class="eye-open" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+
+        <!-- Eye closed (hidden) -->
+        <svg class="eye-off" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+            <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"></path>
+            <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"></path>
+            <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"></path>
+            <path d="m2 2 20 20"></path>
+        </svg>
+    </span>
+</div>
+
+
+        <button class="login-btn" type="submit">Login</button>
+
+    </form>
+
+</div>
+
+<!-- DASHBOARD WRAPPER (hidden until login) -->
+<div id="dashboard-wrapper" style="display:none; height:100vh; background:none;">
+
+    <!-- SIDEBAR (always visible when dashboard is visible) -->
+    <div class="dashboard-sidebar">
+        <div class="sidebar-logo">
+            <span>StealthVM</span>
+        </div>
+
+        <ul class="sidebar-nav">
+            <li class="active" data-target="dashboard-page">🏠 Dashboard</li>
+            <li data-target="users">👤 Users</li>
+            <li data-target="keys">🔑 License Keys</li>
+            <li data-target="generate">➕ Generate Keys</li>
+            <li data-target="cheats">🎮 Cheats</li>
+            <li data-target="loaders">🚫 Loaders</li>
+            <li data-target="bans">🔒 Bans</li>
+            <li data-target="logs">📜 Logs</li>
+            <li data-target="settings">⚙️ Settings</li>
+        </ul>
+    </div>
+
+    <!-- MAIN CONTENT AREA -->
+    <div class="content-wrapper">
+
+        <div id="dashboard-page" class="page-section">
+            Dashboard content…
+        </div>
+
+        <div id="users" class="page-section" style="display:none;">
+            <div class="dashboard-cards">
+      <div class="dashboard-card">
+        <div class="card-title">Total Users</div>
+        <div class="card-value">30</div>
+      </div>
+      <div class="dashboard-card">
+        <div class="card-title">Total Keys</div>
+        <div class="card-value">191</div>
+      </div>
+      <div class="dashboard-card">
+        <div class="card-title">Package</div>
+        <div class="card-value">Developer</div>
+      </div>
+    </div>
+    <div class="dashboard-table-section">
+      <div class="dashboard-table-header">
+        <span>Recent Keys</span>
+        <input class="dashboard-search" placeholder="Search keys...">
+        <button class="refresh-btn">Refresh</button>
+      </div>
+      <table class="dashboard-table">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Status</th>
+            <th>Last Login</th>
+            <th>Subscription</th>
+            <th>HWID</th>
+            <th>Creator</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>User-123</td>
+            <td><span class="status active">Active</span></td>
+            <td>11/23/2025</td>
+            <td>1 days<br><span class="sub-date">04/11/2025, 05:15:41</span></td>
+            <td>b619b2fd...</td>
+            <td>Sosa</td>
+            <td>...</td>
+          </tr>
+          <tr>
+            <td>User-321</td>
+            <td><span class="status active">Active</span></td>
+            <td>11/23/2025</td>
+            <td>1 days<br><span class="sub-date">01/11/2025, 18:33:33</span></td>
+            <td>GMGB1ZG7...</td>
+            <td>Sosa</td>
+            <td>...</td>
+          </tr>
+          <tr>
+            <td>User-456</td>
+            <td><span class="status waiting">Waiting</span></td>
+            <td>11/23/2025</td>
+            <td>1 days<br><span class="sub-date">Will end: 04/11/2025, 06:22:42</span></td>
+            <td>Not set</td>
+            <td>Sosa</td>
+            <td>...</td>
+          </tr>
+          <tr>
+            <td>User-912</td>
+            <td><span class="status active">Active</span></td>
+            <td>11/23/2025</td>
+            <td>1 days<br><span class="sub-date">01/11/2025, 12:43:18</span></td>
+            <td>00331N000...</td>
+            <td>Sosa</td>
+            <td>...</td>
+          </tr>
+          <tr>
+            <td>User-1450</td>
+            <td><span class="status active">Active</span></td>
+            <td>11/23/2025</td>
+            <td>7 days<br><span class="sub-date">07/11/2025, 10:50:43</span></td>
+            <td>E2B3FA68F...</td>
+            <td>Sosa</td>
+            <td>...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+        </div>
+        </div>
+
+        <div id="keys" class="page-section" style="display:none;">
+             <div class="dashboard-cards">
+      <div class="dashboard-card">
+        <div class="card-title">Active Keys</div>
+        <div class="card-value">30</div>
+      </div>
+      <div class="dashboard-card">
+        <div class="card-title">Resellers</div>
+        <div class="card-value">3</div>
+      </div>
+      <div class="dashboard-card">
+        <div class="card-title">Package</div>
+        <div class="card-value">Developer</div>
+      </div>
+    </div>
+    <div class="dashboard-table-section">
+      <div class="dashboard-table-header">
+        <span>Recent Keys</span>
+        <input class="dashboard-search" placeholder="Search keys...">
+        <button class="refresh-btn">Refresh</button>
+      </div>
+      <table class="dashboard-table">
+        <thead>
+          <tr>
+            <th>Key</th>
+            <th>Status</th>
+            <th>Cheat</th>
+            <th>Subscription</th>
+            <th>HWID</th>
+            <th>Creator</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>SILENTVM-AS82O</td>
+            <td><span class="status active">Active</span></td>
+            <td>StealthVM (Private External)</td>
+            <td>1 days<br><span class="sub-date">04/11/2025, 05:15:41</span></td>
+            <td>b619b2fd...</td>
+            <td>Sosa</td>
+            <td>...</td>
+          </tr>
+          <tr>
+            <td>SILENTVM-9A92O</td>
+            <td><span class="status active">Active</span></td>
+            <td>StealthVM (Private External)</td>
+            <td>1 days<br><span class="sub-date">01/11/2025, 18:33:33</span></td>
+            <td>GMGB1ZG7...</td>
+            <td>Sosa</td>
+            <td>...</td>
+          </tr>
+          <tr>
+            <td>SILENTVM-S912MS</td>
+            <td><span class="status waiting">Waiting</span></td>
+            <td>StealthVM (Private External)</td>
+            <td>1 days<br><span class="sub-date">Will end: 04/11/2025, 06:22:42</span></td>
+            <td>Not set</td>
+            <td>Sosa</td>
+            <td>...</td>
+          </tr>
+          <tr>
+            <td>SILENTVM-1209ask</td>
+            <td><span class="status active">Active</span></td>
+            <td>StealthVM (Private External)</td>
+            <td>1 days<br><span class="sub-date">01/11/2025, 12:43:18</span></td>
+            <td>00331N000...</td>
+            <td>Sosa</td>
+            <td>...</td>
+          </tr>
+          <tr>
+            <td>SILENTVM-190sak5</td>
+            <td><span class="status active">Active</span></td>
+            <td>StealthVM (Private External)</td>
+            <td>7 days<br><span class="sub-date">07/11/2025, 10:50:43</span></td>
+            <td>E2B3FA68F...</td>
+            <td>Sosa</td>
+            <td>...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+        </div>
+
+        <div id="generate" class="page-section" style="display:none;">
+            Generate keys page loading…
+        </div>
+
+        <div id="cheats" class="page-section" style="display:none;">
+            <div class="dashboard-cards">
+      <div class="dashboard-card">
+        <div class="card-title">Active Keys</div>
+        <div class="card-value">30</div>
+      </div>
+      <div class="dashboard-card">
+        <div class="card-title">Resellers</div>
+        <div class="card-value">3</div>
+      </div>
+      <div class="dashboard-card">
+        <div class="card-title">Package</div>
+        <div class="card-value">Developer</div>
+      </div>
+    </div>
+    <div class="dashboard-table-section">
+      <div class="dashboard-table-header">
+        <span>Cheats</span>
+        <input class="dashboard-search" placeholder="Search keys...">
+        <button class="refresh-btn">Refresh</button>
+      </div>
+      <table class="dashboard-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Status</th>
+            <th>Last Updated</th>
+            <th>Subscription</th>
+            <th>HWID</th>
+            <th>Creator</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>StealthVM (Private External)</td>
+            <td><span class="status active">Active</span></td>
+            <td>11/23/2025</td>
+            <td>1 days<br><span class="sub-date">04/11/2025, 05:15:41</span></td>
+            <td>b619b2fd...</td>
+            <td>Sosa</td>
+            <td>...</td>
+          </tr>
+          <tr>
+            <td>StealthVM (Private External)</td>
+            <td><span class="status active">Active</span></td>
+            <td>11/23/2025</td>
+            <td>1 days<br><span class="sub-date">01/11/2025, 18:33:33</span></td>
+            <td>GMGB1ZG7...</td>
+            <td>Sosa</td>
+            <td>...</td>
+          </tr>
+          <tr>
+            <td>StealthVM (Private External)</td>
+            <td><span class="status waiting">Waiting</span></td>
+            <td>11/23/2025</td>
+            <td>1 days<br><span class="sub-date">Will end: 04/11/2025, 06:22:42</span></td>
+            <td>Not set</td>
+            <td>Sosa</td>
+            <td>...</td>
+          </tr>
+          <tr>
+            <td>StealthVM (Private External)</td>
+            <td><span class="status active">Active</span></td>
+            <td>11/23/2025</td>
+            <td>1 days<br><span class="sub-date">01/11/2025, 12:43:18</span></td>
+            <td>00331N000...</td>
+            <td>Sosa</td>
+            <td>...</td>
+          </tr>
+          <tr>
+            <td>StealthVM (Private External)</td>
+            <td><span class="status active">Active</span></td>
+            <td>11/23/2025</td>
+            <td>7 days<br><span class="sub-date">07/11/2025, 10:50:43</span></td>
+            <td>E2B3FA68F...</td>
+            <td>Sosa</td>
+            <td>...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+        </div>
+
+        <div id="loaders" class="page-section" style="display:none;">
+            Loaders page loading…
+        </div>
+
+        <div id="bans" class="page-section" style="display:none;">
+            Bans page loading…
+        </div>
+
+        <div id="logs" class="page-section" style="display:none;">
+            Logs page loading…
+        </div>
+
+        <div id="settings" class="page-section" style="display:none;">
+            Settings page loading…
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+<script>
+
+function togglePass(el) {
+    const input = el.previousElementSibling; // the input field
+    const eyeOpen = el.querySelector('.eye-open');
+    const eyeOff = el.querySelector('.eye-off');
+
+    if (input.type === "password") {
+        input.type = "text";
+        eyeOpen.style.display = "none";
+        eyeOff.style.display = "block";
+    } else {
+        input.type = "password";
+        eyeOpen.style.display = "block";
+        eyeOff.style.display = "none";
+    }
+}
+
+// Switch from login to dashboard on login
+const loginForm = document.getElementById('login-form');
+if (loginForm) {
+  loginForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    document.getElementById('login-card').style.display = 'none';
+    document.getElementById('dashboard-wrapper').style.display = 'flex';
+        document.body.classList.add("no-vignette");
+  });
+}
+
+const pages = document.querySelectorAll(".page-section");
+
+// Show page function
+function showPage(pageId) {
+
+    // Hide every page
+    pages.forEach(p => p.style.display = "none");
+
+    // Show the selected one
+    const target = document.getElementById(pageId);
+    if (target) {
+        target.style.display = "block";
+    }
+
+    // Update active tab
+    document.querySelectorAll(".sidebar-nav li")
+        .forEach(li => li.classList.remove("active"));
+
+    const activeTab = document.querySelector(`[data-target='${pageId}']`);
+    if (activeTab) {
+        activeTab.classList.add("active");
+    }
+}
+
+// Sidebar tab click binding
+document.querySelectorAll(".sidebar-nav li").forEach(li => {
+    li.addEventListener("click", () => {
+        const page = li.getAttribute("data-target");
+        showPage(page);
+    });
+});
+</script>
+
+</body>
+</html>
